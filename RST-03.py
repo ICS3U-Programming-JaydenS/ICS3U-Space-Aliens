@@ -3,7 +3,6 @@
 # Date: May 12, 2025
 # This code Displays The background on the pybadge
 
-
 import ugame
 import stage
 
