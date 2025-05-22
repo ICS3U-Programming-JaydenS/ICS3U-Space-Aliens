@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # Created By: Jayden Smith
 # Date: May 12, 2025
-# This code Displays The background on the pybadge
+# This code adds the buttons
+
 
 import ugame
 import stage
@@ -17,6 +18,24 @@ def game_scene():
     game.render_block()
     while True:
         # get user input
+        keys = ugame.buttons.get_pressed()
+
+        if keys & ugame.K_X:
+            print("A")
+        if keys & ugame.K_O:
+            print("B")
+        if keys & ugame.K_START:
+            print("Start")
+        if keys & ugame.K_SELECT:
+            print("Select")
+        if keys & ugame.K_RIGHT:
+            ship.move(ship.x + 1, ship.y)
+        if keys & ugame.K_LEFT:
+            ship.move(ship.x - 1, ship.y)
+        if keys & ugame.K_UP:
+            ship.move(ship.x, ship.y - 1)
+        if keys & ugame.K_DOWN:
+            ship.move(ship.x, ship.y + 1)
         # update game logic
         # redraw Sprites
         game.render_sprites([ship])
