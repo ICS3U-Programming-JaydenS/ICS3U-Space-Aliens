@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # Created By: Jayden Smith
 # Date: May 12, 2025
-# This code adds the buttons
+# This is the RST project
 
 
 import ugame
 import stage
-
+import constants
 
 def game_scene():
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
@@ -21,21 +21,31 @@ def game_scene():
         keys = ugame.buttons.get_pressed()
         # Checks what button you pressed and makes you move in a certain way.
         if keys & ugame.K_X:
-            print("A")
+            pass
         if keys & ugame.K_O:
-            print("B")
+            pass
         if keys & ugame.K_START:
-            print("Start")
+            pass
         if keys & ugame.K_SELECT:
-            print("Select")
+            pass
         if keys & ugame.K_RIGHT:
-            ship.move(ship.x + 1, ship.y)
+            # Causes a border on right side of pybadge
+            if ship.x <= constants.SCREEN_X - constants.SPRITE_SIZE:
+                ship.move(ship.x + 1, ship.y)
+            else:
+                ship.move(constants.SCREEN_X - constants.SPRITE_SIZE, ship.y)
+        
         if keys & ugame.K_LEFT:
-            ship.move(ship.x - 1, ship.y)
+            # Causes a border on left side of pybadge
+            if ship.x <= 0:
+                ship.move(ship.x + 1, ship.y)
+            else:
+                ship.move(ship.x - 1, ship.y)
         if keys & ugame.K_UP:
-            ship.move(ship.x, ship.y - 1)
+            pass
         if keys & ugame.K_DOWN:
-            ship.move(ship.x, ship.y + 1)
+            pass
+        
         # update game logic
         # redraw Sprites
         game.render_sprites([ship])
