@@ -9,8 +9,11 @@ import stage
 
 
 def game_scene():
+    # Image banks for circuit python
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16 ("space_aliens.bmp")
+    # Sprite creation for ship (5th sprite) and refresh every frame
+    
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
     background = stage.Grid(image_bank_background, 10, 8)  
     game = stage.Stage(ugame.display, 60)

@@ -113,11 +113,6 @@ def menu_scene():
        
         game.tick()
 def game_scene():
-    def show_alien():
-        for alien_number in range(len(aliens)):
-            if aliens [alien_number].x < 0:
-                aliens [alien_number].move(random.randint(0 + constants.SPRITE_SIZE, constants.SCREEN_X - constants.SPRITE_SIZE), constants.OFF_TOP_SCREEN)
-                break
 
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16 ("space_aliens.bmp")
@@ -131,6 +126,13 @@ def game_scene():
     sound.mute(False)
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
     background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
+    # Creates a random background
+    for x_location in range(constants.SCREEN_GRID_X):
+        for y_location in range(constants.SCREEN_GRID_Y):
+        
+            tile_picked = random.randint(1, 3)
+       
+            background.tile(x_location, y_location, tile_picked)
     alien = stage.Sprite (image_bank_sprites, 9, int(constants.SCREEN_X/2 - constants.SCREEN_Y/2), 16)
     lasers = []
     for laser_number in range(constants.TOTAL_NUMBER_OF_LASERS):
@@ -138,7 +140,6 @@ def game_scene():
         lasers.append(a_single_laser)
     game = stage.Stage(ugame.display, constants.FPS)
     game.layers = lasers + [ship] + [alien] + [background]
-    game.render_sprites([ship] + [alien])
     game.render_block()
     while True:
         # get user input

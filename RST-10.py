@@ -115,8 +115,9 @@ def menu_scene():
 def game_scene():
     def show_alien():
         for alien_number in range(len(aliens)):
-            if aliens [alien_number].x < 0:
-                aliens [alien_number].move(random.randint(0 + constants.SPRITE_SIZE, constants.SCREEN_X - constants.SPRITE_SIZE), constants.OFF_TOP_SCREEN)
+            if aliens[alien_number].x < 0:
+                aliens[alien_number].move(random.randint(0 + constants.SPRITE_SIZE, constants.SCREEN_X - constants.SPRITE_SIZE), constants.OFF_TOP_SCREEN)
+                
                 break
 
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
@@ -145,7 +146,7 @@ def game_scene():
 
     game = stage.Stage(ugame.display, constants.FPS)
     game.layers = aliens + lasers + [ship] + [background]
-    game.render_sprites(aliens + lasers + [ship] )
+    game.render_sprites(lasers + [ship] )
     game.render_block()
     while True:
         # get user input
@@ -202,8 +203,8 @@ def game_scene():
         
         for alien_number in range(len(aliens)):
             if aliens[alien_number].x > 0:
-                aliens[alien_number].move(aliens[alien_number].x, aliens[alien_number].y - constants.ALIEN_SPEED)
-                if aliens[alien_number].y < constants.OFF_TOP_SCREEN:
+                aliens[alien_number].move(aliens[alien_number].x, aliens[alien_number].y + constants.ALIEN_SPEED)
+                if aliens[alien_number].y > constants.SCREEN_Y:
                     aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         # update game logic
         # redraw Sprites

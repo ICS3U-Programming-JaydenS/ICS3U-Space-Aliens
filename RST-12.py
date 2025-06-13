@@ -1,3 +1,8 @@
+# Created By: Jayden Smith
+# Date: May 12, 2025
+# This is the RST project
+
+
 import ugame
 import stage
 import random
@@ -110,20 +115,18 @@ def menu_scene():
 def game_scene():
     def show_alien():
         for alien_number in range(len(aliens)):
-            if aliens [alien_number].x < 0:
-                aliens [alien_number].move(random.randint(0 + constants.SPRITE_SIZE, constants.SCREEN_X - constants.SPRITE_SIZE), constants.OFF_TOP_SCREEN)
+            if aliens[alien_number].x < 0:
+                aliens[alien_number].move(random.randint(0 + constants.SPRITE_SIZE, constants.SCREEN_X - constants.SPRITE_SIZE), constants.OFF_TOP_SCREEN)
+                
                 break
-    # this function is the main game scene
-
-    # for score
     score = 0
-
+    
     score_text = stage.Text(width=29, height=14)
     score_text.clear()
     score_text.cursor(0,0)
     score_text.move(1,1)
     score_text.text("Score: {0}".format(score))
-
+    
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16 ("space_aliens.bmp")
     a_button = constants.button_state["button_up"]
@@ -153,8 +156,7 @@ def game_scene():
     show_alien()
 
     game = stage.Stage(ugame.display, constants.FPS)
-    game.layers = [score_text] + aliens + lasers + [ship] + [background]
-    game.render_sprites(aliens + lasers + [ship] )
+    game.layers = [score_text] +lasers + [ship] + aliens  + [background]
     game.render_block()
     while True:
         # get user input
@@ -202,7 +204,14 @@ def game_scene():
                     lasers[laser_number].move(ship.x, ship.y)
                     sound.play(pew_sound)
                     break
-                    
+
+
+        for laser_number in range(len(lasers)):
+            if lasers[laser_number].x > 0:
+                lasers[laser_number].move(lasers[laser_number].x, lasers[laser_number].y - constants.LASER_SPEED)
+                if lasers[laser_number].y < constants.OFF_TOP_SCREEN:
+                    lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+                        
         for laser_number in range(len(lasers)):
             if lasers[laser_number].x > 0:
                 for alien_number in range(len(aliens)):
@@ -212,31 +221,31 @@ def game_scene():
                                  aliens[alien_number].x + 1, aliens[alien_number].y,
                                  aliens[alien_number].x + 15, aliens[alien_number].y + 15):
                     # you hit an alien
-                    aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                    lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                    sound.stop()
-                    sound.play(boom_sound)
-                    show_alien()
-                    show_alien()
-                    score = score + 1
-                    score_text.clear()
-                    score_text.cursor(0,0)
-                    score_text.move(1,1)
-                    score_text.text("Score: {0}".format(score))
+                            aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+                            lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+                            sound.stop()
+                            sound.play(boom_sound)
+                            show_alien()
+                            show_alien()
+                            score = score + 1
+                            score_text.clear()
+                            score_text.cursor(0,0)
+                            score_text.move(1,1)
+                            score_text.text("Score: {0}".format(score))
         
         for alien_number in range(len(aliens)):
             if aliens[alien_number].x > 0:
-                aliens[alien_number].move(aliens[alien_number].x, aliens[alien_number].y - constants.ALIEN_SPEED)
-                if aliens[alien_number].y < constants.OFF_TOP_SCREEN:
+                aliens[alien_number].move(aliens[alien_number].x, aliens[alien_number].y + constants.ALIEN_SPEED)
+                if aliens[alien_number].y > constants.SCREEN_Y:
                     aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                     show_alien()
                     score -= 1
                     if score < 0:
                         score = 0
-                    score_text.clear()
-                    score_text.cursor(0,0)
-                    score_text.move(1,1)
-                    score_text.text("Score: {0}".format(score))
+                        score_text.clear()
+                        score_text.cursor(0,0)
+                        score_text.move(1,1)
+                        score_text.text("Score: {0}".format(score))
         # update game logic
         # redraw Sprites
         game.render_sprites(aliens + lasers + [ship] )

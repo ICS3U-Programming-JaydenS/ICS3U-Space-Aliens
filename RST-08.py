@@ -131,7 +131,7 @@ def game_scene():
         
             tile_picked = random.randint(1, 3)
        
-        background.tile(x_location, y_location, tile_picked)
+            background.tile(x_location, y_location, tile_picked)
     alien = stage.Sprite (image_bank_sprites, 9, int(constants.SCREEN_X/2 - constants.SCREEN_Y/2), 16)
     game = stage.Stage(ugame.display, constants.FPS)
     game.layers = [ship] + [alien] + [background]
@@ -160,17 +160,17 @@ def game_scene():
             print("Start")
         if keys & ugame.K_SELECT:
             print("Select")
-        if keys & ugame.K_RIGHT:
-            if ship.x <= constants.SCREEN_X - constants.SPRITE_SIZE:
+
+        if keys & ugame.K_RIGHT != 0:
+            if ship.x <= 160:
                 ship.move(ship.x + 1, ship.y)
             else:
-                ship.move(constants.SCREEN_X - constants.SPRITE_SIZE, ship.y)
-       
-        if keys & ugame.K_LEFT:
-            if ship.x <= 0:
-                ship.move(ship.x + 1, ship.y)
-            else:
+                ship.move(0 - 16, ship.y)
+        if keys & ugame.K_LEFT != 0:
+            if ship.x > 0 - 16:
                 ship.move(ship.x - 1, ship.y)
+            else:
+                ship.move(160, ship.y)
         if keys & ugame.K_UP:
             pass
         if keys & ugame.K_DOWN:
