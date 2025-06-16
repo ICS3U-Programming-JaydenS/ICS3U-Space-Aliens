@@ -83,48 +83,72 @@ def splash_scene():
        
         game.tick()
 def menu_scene():
+    # Pulls MT studio BMP
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
+
+    # Sets text list
     text = []
+
+    # Defines where the location of the text should go
     text1 = stage.Text (width = 29, height = 12, font =None, palette = constants.NEW_PALETTE, buffer=None)
     text1.move(12,10)
+
+    # What the text is
     text1.text("Jay's Game Studios")
     text.append(text1)
 
+    # Defines the location of the text
     text2 = stage.Text(width = 29, height = 12, font =None, palette = constants.NEW_PALETTE, buffer=None)
     text2.move(40, 110)
+    # What the text says
     text2.text("PRESS START")
     text.append(text2)
-   
-   
-   
-    background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
-   
-   
+    
+    
+    # Sets the background
+    background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y) 
+    
+    # Refreshes at 60 frames per second
     game = stage.Stage(ugame.display, constants.FPS)
+    # Renders the sprite and background
     game.layers = text + [background]
     game.render_block()
-   
+    
     while True:
         keys = ugame.buttons.get_pressed()
+        # When you press start the game starts
         if keys & ugame.K_START != 0:
             game_scene()
-     
+      
         # redraw Sprites
-       
+        
         game.tick()
 def game_scene():
 
+    # Pulls BMP files to variables in game
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16 ("space_aliens.bmp")
+
+    # Initialize button states to "up" (not pressed) for A, B, Start, and Select button
     a_button = constants.button_state["button_up"]
     b_button = constants.button_state["button_up"]
     start_button = constants.button_state["button_up"]
     select_button = constants.button_state["button_up"]
+
+    # Gets wav sound for pew sound and prepare audio system
     pew_sound = open("pew.wav", 'rb')
     sound = ugame.audio
+
+    # stop any other sound
     sound.stop()
+
+    # Stops the sound from playing
     sound.mute(False)
+
+    # Selects the ship sprite and places it in X 75 and Y 66
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
+
+    # Creates a background grid using the image bank, sized 10 tiles wide by 8 tiles tall
     background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
     # Creates a random background
     for x_location in range(constants.SCREEN_GRID_X):
@@ -133,9 +157,16 @@ def game_scene():
             tile_picked = random.randint(1, 3)
        
             background.tile(x_location, y_location, tile_picked)
+
+    # Gets the alien Sprite
     alien = stage.Sprite (image_bank_sprites, 9, int(constants.SCREEN_X/2 - constants.SCREEN_Y/2), 16)
+
+    # Creates lasers list
     lasers = []
+    # Makes sure you cannot make more then 5 laser on a screen at once
     for laser_number in range(constants.TOTAL_NUMBER_OF_LASERS):
+
+        # Selects lasers sprite and places it in the list
         a_single_laser = stage.Sprite(image_bank_sprites, 10, constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         lasers.append(a_single_laser)
     game = stage.Stage(ugame.display, constants.FPS)
@@ -188,9 +219,13 @@ def game_scene():
                     sound.play(pew_sound)
                     break
                     
+        # Move each laser upward and check if it goes off the top of the screen
         for laser_number in range(len(lasers)):
+            # Ensures that the only lasers that are updated are the ones on screen
             if lasers[laser_number].x > 0:
                 lasers[laser_number].move(lasers[laser_number].x, lasers[laser_number].y - constants.LASER_SPEED)
+
+                # If it goes off screen it gets hidden
                 if lasers[laser_number].y < constants.OFF_TOP_SCREEN:
                     lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         # update game logic

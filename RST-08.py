@@ -83,58 +83,83 @@ def splash_scene():
        
         game.tick()
 def menu_scene():
+    # Pulls MT studio BMP
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
+
+    # Sets text list
     text = []
+
+    # Defines where the location of the text should go
     text1 = stage.Text (width = 29, height = 12, font =None, palette = constants.NEW_PALETTE, buffer=None)
     text1.move(12,10)
+
+    # What the text is
     text1.text("Jay's Game Studios")
     text.append(text1)
 
+    # Defines the location of the text
     text2 = stage.Text(width = 29, height = 12, font =None, palette = constants.NEW_PALETTE, buffer=None)
     text2.move(40, 110)
+    # What the text says
     text2.text("PRESS START")
     text.append(text2)
-   
-   
-   
-    background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
-   
-   
+    
+    
+    # Sets the background
+    background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y) 
+    
+    # Refreshes at 60 frames per second
     game = stage.Stage(ugame.display, constants.FPS)
+    # Renders the sprite and background
     game.layers = text + [background]
     game.render_block()
-   
+    
     while True:
         keys = ugame.buttons.get_pressed()
+        # When you press start the game starts
         if keys & ugame.K_START != 0:
             game_scene()
-     
+      
         # redraw Sprites
-       
+        
         game.tick()
 def game_scene():
+
+    # Pulls BMP files to variables in game
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16 ("space_aliens.bmp")
+
+    # Initialize button states to "up" (not pressed) for A, B, Start, and Select button
     a_button = constants.button_state["button_up"]
     b_button = constants.button_state["button_up"]
     start_button = constants.button_state["button_up"]
     select_button = constants.button_state["button_up"]
+
+    # Gets wav sound for pew sound and prepare audio system
     pew_sound = open("pew.wav", 'rb')
     sound = ugame.audio
+
+    # stop any other sound
     sound.stop()
+
+    # Stops the sound from playing
     sound.mute(False)
+
+    # Selects the ship sprite and places it in X 75 and Y 66
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
-    background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
-    # Creates a random background
-    for x_location in range(constants.SCREEN_GRID_X):
-        for y_location in range(constants.SCREEN_GRID_Y):
-        
-            tile_picked = random.randint(1, 3)
-       
-            background.tile(x_location, y_location, tile_picked)
+
+    # Creates a background grid using the image bank, sized 10 tiles wide by 8 tiles tall
+    background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y) 
+    # Gets the alien Sprite
     alien = stage.Sprite (image_bank_sprites, 9, int(constants.SCREEN_X/2 - constants.SCREEN_Y/2), 16)
+
+    # Refreshes the game every 60 pixels a second
     game = stage.Stage(ugame.display, constants.FPS)
+
+    # Layers the game to draw the ship then the background
     game.layers = [ship] + [alien] + [background]
+
+    # Renders the sprite and background
     game.render_sprites([ship] + [alien])
     game.render_block()
     while True:
@@ -153,35 +178,38 @@ def game_scene():
                 a_button = constants.button_state["button_released"]
             else:
                 a_button = constants.button_state["button_up"]
-                       
-           
+                        
+            
             pass
         if keys & ugame.K_START:
             print("Start")
         if keys & ugame.K_SELECT:
             print("Select")
-
-        if keys & ugame.K_RIGHT != 0:
-            if ship.x <= 160:
+        if keys & ugame.K_RIGHT:
+            # Makes you go right in game
+            if ship.x <= constants.SCREEN_X - constants.SPRITE_SIZE:
                 ship.move(ship.x + 1, ship.y)
             else:
-                ship.move(0 - 16, ship.y)
-        if keys & ugame.K_LEFT != 0:
-            if ship.x > 0 - 16:
-                ship.move(ship.x - 1, ship.y)
+                ship.move(constants.SCREEN_X - constants.SPRITE_SIZE, ship.y)
+        
+        if keys & ugame.K_LEFT:
+            # Makes you go left
+            if ship.x <= 0:
+                ship.move(ship.x + 1, ship.y)
             else:
-                ship.move(160, ship.y)
+                ship.move(ship.x - 1, ship.y)
         if keys & ugame.K_UP:
             pass
         if keys & ugame.K_DOWN:
             pass
-       
+        
         if a_button == constants.button_state ["button_just_pressed"]:
+            
+            # If buttons pressed play pew sound
             sound.play (pew_sound)
         # update game logic
         # redraw Sprites
-        game.render_sprites([ship] + [alien])
+        game.render_sprites([ship, alien])
         game.tick()
-       
 if __name__ == "__main__":
-    splash_scene()
+    game_scene()
